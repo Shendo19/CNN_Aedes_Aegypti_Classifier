@@ -11,6 +11,8 @@ from keras.layers import Dense, Dropout, Flatten
 from sklearn.model_selection import StratifiedKFold
 import sklearn.metrics as skm
 
+file_url = (r"C:\Users\TEAM\Documents\GitHub\Nueva carpeta")
+
 def windows(data, window_size):
   start = 0
   while start < len(data):
@@ -36,7 +38,7 @@ def extract_features( sub_dirs, file_ext="*.wav"):
           log_specgrams.append(logspec)
           labels.append(label)
   features = np.asarray(log_specgrams).reshape(len(log_specgrams), bands, frames, 1)
-  np_labels = np.array(labels, dtype=np.int)
+  np_labels = np.array(labels, dtype=int)
   unique, counts = np.unique(np_labels, return_counts=True) # to check the number of samples for each class
 
   return np.array(features), np_labels
@@ -89,7 +91,7 @@ def train_and_evaluate_model(model, xtrain, ytrain, xval, yval):
 seed = 123
 np.random.seed(seed)  # for reproducibility
 
-file_url = 'E:\\mosquitos\\train'
+
 
 bands = 60
 frames = 40
@@ -98,7 +100,7 @@ n_fft = 1024
 
 sample_rate = 8000
 
-n_folds = 10
+n_folds = 11
 X, Y = load_data()
 
 skf = StratifiedKFold(n_splits=n_folds, shuffle=True)
@@ -110,24 +112,24 @@ f1_scores = []
 
 for i, (train, test) in enumerate(skf.split(X, Y)):
   print("Running Fold", i + 1, "/", n_folds)
-  model = None # Clearing the NN.
-  model = create_model()
+model = None # Clearing the NN.
+model = create_model()
 
   # Generate batches from indices
-  xtrain, xval = X[train], X[test]
-  ytrain, yval = Y[train], Y[test]
-  accuracy, precision, recall, f1 = train_and_evaluate_model(model, xtrain, ytrain, xval, yval)
-  accuracy_scores.append(accuracy)
-  precision_scores.append(precision)
-  recall_scores.append(recall)
-  f1_scores.append(f1)
+xtrain, xval = X[train], X[test]
+ytrain, yval = Y[train], Y[test]
+accuracy, precision, recall, f1 = train_and_evaluate_model(model, xtrain, ytrain, xval, yval)
+accuracy_scores.append(accuracy)
+precision_scores.append(precision)
+recall_scores.append(recall)
+f1_scores.append(f1)
 
 print("Accuracy scores: " + str(accuracy_scores))
 print("Precision scores: " + str(precision_scores))
 print("Recall scores: " + str(recall_scores))
 print("F1 scores: " + str(f1_scores))
 
-csv_filename = "binary.csv"
+csv_filename = "binary_pro.csv"
 
 with open(csv_filename, 'w', newline='') as csv_file:
   csv_writer = csv.writer(csv_file, delimiter=',')
